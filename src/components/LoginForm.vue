@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-import axios from 'axios'
 import { useRouter } from 'vue-router'
 import { login } from '@/services/auth'
+import { extraerMensajeError } from '@/services/httpClient'
 
 const router = useRouter()
 
@@ -41,11 +41,7 @@ async function handleSubmit() {
     })
     router.push('/')
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      errorMessage.value = error.response?.data?.message ?? 'No se pudo iniciar sesión. Intenta de nuevo.'
-    } else {
-      errorMessage.value = 'No se pudo iniciar sesión. Intenta de nuevo.'
-    }
+    errorMessage.value = extraerMensajeError(error, 'No se pudo iniciar sesión. Intenta de nuevo.')
   } finally {
     isSubmitting.value = false
   }

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import axios from 'axios'
 import { activate } from '@/services/auth'
+import { extraerMensajeError } from '@/services/httpClient'
 
 const route = useRoute()
 
@@ -17,11 +17,7 @@ onMounted(async () => {
     status.value = 'success'
   } catch (error) {
     status.value = 'error'
-    if (axios.isAxiosError(error)) {
-      errorMessage.value = error.response?.data?.message ?? 'No se pudo activar la cuenta.'
-    } else {
-      errorMessage.value = 'No se pudo activar la cuenta.'
-    }
+    errorMessage.value = extraerMensajeError(error, 'No se pudo activar la cuenta.')
   }
 })
 </script>

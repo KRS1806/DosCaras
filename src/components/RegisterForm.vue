@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-import axios from 'axios'
 import { register } from '@/services/auth'
+import { extraerMensajeError } from '@/services/httpClient'
 
 const form = reactive({
   name: '',
@@ -50,17 +50,13 @@ async function handleSubmit() {
       password: form.password,
     })
     successMessage.value = '¡Cuenta creada con éxito! Activá tu cuenta para poder iniciar sesión.'
-    activationToken.value = response.data.activationToken
+    activationToken.value = response.activationToken
     form.name = ''
     form.email = ''
     form.password = ''
     form.confirmPassword = ''
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      errorMessage.value = error.response?.data?.message ?? 'No se pudo completar el registro. Intenta de nuevo.'
-    } else {
-      errorMessage.value = 'No se pudo completar el registro. Intenta de nuevo.'
-    }
+    errorMessage.value = extraerMensajeError(error, 'No se pudo completar el registro. Intenta de nuevo.')
   } finally {
     isSubmitting.value = false
   }

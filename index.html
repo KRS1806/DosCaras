@@ -7,6 +7,20 @@
     <title>Vite App</title>
   </head>
   <body>
+    <script>
+      (function () {
+        try {
+          var raw = localStorage.getItem('lasdoscaras_theme')
+          var tema = raw ? JSON.parse(raw).value : null
+          if (tema !== 'dark' && tema !== 'light') {
+            tema = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+          }
+          document.documentElement.setAttribute('data-theme', tema)
+        } catch (e) {
+          document.documentElement.setAttribute('data-theme', 'light')
+        }
+      })()
+    </script>
     <div id="app"></div>
     <script type="module" src="/src/main.ts"></script>
   </body>
