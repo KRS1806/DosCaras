@@ -5,6 +5,8 @@ import PlaceholderView from '@/views/PlaceholderView.vue'
 import PublicationFormView from '@/views/PublicationFormView.vue'
 import SearchResultsView from '@/views/SearchResultsView.vue'
 import ProfileView from '@/views/ProfileView.vue'
+import AdminUsersView from '@/views/AdminUsersView.vue'
+import PublicationDetailView from '@/views/PublicationDetailView.vue'
 
 declare module 'vue-router' {
   interface RouteMeta {
@@ -49,9 +51,7 @@ const router = createRouter({
     {
       path: '/views/:id',
       name: 'view-detail',
-      // TODO: reemplazar en plan 02
-      component: PlaceholderView,
-      props: { titulo: 'Detalle de publicación' },
+      component: PublicationDetailView,
     },
     {
       path: '/views/new',
@@ -84,9 +84,7 @@ const router = createRouter({
     {
       path: '/admin/users',
       name: 'admin-users',
-      // TODO: reemplazar en plan 08
-      component: PlaceholderView,
-      props: { titulo: 'Panel superadmin: gestión de usuarios' },
+      component: AdminUsersView,
       meta: { requiresAuth: true, requiresRole: 'superadmin' },
     },
     {

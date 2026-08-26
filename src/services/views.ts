@@ -68,10 +68,17 @@ interface LadoApi {
   sources?: FuenteApi[]
   likeCount?: number
   dislikeCount?: number
+  myReaction?: 'LIKE' | 'DISLIKE' | null
 }
 
 function ladoVacio(): Lado {
-  return { titulo: '', descripcion: '', likes: 0, dislikes: 0, fuentes: [] }
+  return { titulo: '', descripcion: '', likes: 0, dislikes: 0, miReaccion: null, fuentes: [] }
+}
+
+function mapearReaccion(reaccion: LadoApi['myReaction']): Lado['miReaccion'] {
+  if (reaccion === 'LIKE') return 'like'
+  if (reaccion === 'DISLIKE') return 'dislike'
+  return null
 }
 
 function mapearLado(lado: LadoApi): Lado {
@@ -80,6 +87,7 @@ function mapearLado(lado: LadoApi): Lado {
     descripcion: lado.description ?? '',
     likes: lado.likeCount ?? 0,
     dislikes: lado.dislikeCount ?? 0,
+    miReaccion: mapearReaccion(lado.myReaction),
     fuentes: (lado.sources ?? []).map(mapearFuente),
   }
 }
@@ -200,6 +208,11 @@ export async function crearVista(payload: PublicacionPayload): Promise<Publicaci
 
 export async function actualizarVista(id: string, payload: PublicacionPayload): Promise<Publicacion> {
   const respuesta = await httpClient.put<{ view: unknown }>(`/views/${id}`, mapearPublicacionPayload(payload))
+  return mapearPublicacion(respuesta.view)
+}
+
+export async function despublicarVista(id: string): Promise<Publicacion> {
+  const respuesta = await httpClient.patch<{ view: unknown }>(`/views/${id}/unpublish`)
   return mapearPublicacion(respuesta.view)
 }
 
