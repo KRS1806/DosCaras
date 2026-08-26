@@ -79,9 +79,7 @@ const router = createRouter({
     {
       path: '/authors/:id',
       name: 'author-profile',
-      // TODO: reemplazar en plan 07
-      component: PlaceholderView,
-      props: { titulo: 'Perfil público de autor' },
+      component: () => import('@/views/AuthorProfileView.vue'),
     },
     {
       path: '/admin/users',
