@@ -10,6 +10,7 @@ export interface ConsultaVistas {
   hashtag?: string
   sort?: OrdenTablero
   autor?: 'me'
+  autorId?: string
 }
 
 const ORDEN_API: Record<OrdenTablero, 'recent' | 'likes'> = {
@@ -128,6 +129,7 @@ export async function obtenerVistas(consulta: ConsultaVistas): Promise<Respuesta
       hashtag: consulta.hashtag,
       sort: consulta.sort ? ORDEN_API[consulta.sort] : undefined,
       autor: consulta.autor,
+      autorId: consulta.autorId,
     },
   })
 
