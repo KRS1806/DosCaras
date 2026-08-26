@@ -110,16 +110,12 @@ const router = createRouter({
     {
       path: '/403',
       name: 'forbidden',
-      // TODO: reemplazar en plan 11
-      component: PlaceholderView,
-      props: { titulo: 'Acceso denegado (403)' },
+      component: () => import('@/views/ForbiddenView.vue'),
     },
     {
       path: '/:pathMatch(.*)*',
       name: 'not-found',
-      // TODO: reemplazar en plan 11
-      component: PlaceholderView,
-      props: { titulo: 'Página no encontrada (404)' },
+      component: () => import('@/views/NotFoundView.vue'),
     },
   ],
 })
