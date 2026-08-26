@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { FuentePayload, LadoPayload } from '@/services/views'
+import { idVideoYoutube } from '@/utils/youtube'
 
 defineProps<{
   etiqueta: string
@@ -24,10 +25,6 @@ function quitarFuente(indice: number) {
   modelo.value.fuentes.splice(indice, 1)
 }
 
-function idVideoYoutube(url: string): string | null {
-  const coincidencia = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([\w-]{11})/)
-  return coincidencia?.[1] ?? null
-}
 </script>
 
 <template>

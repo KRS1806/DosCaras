@@ -19,6 +19,7 @@ export interface Lado {
   descripcion: string
   likes: number
   dislikes: number
+  miReaccion: 'like' | 'dislike' | null
   fuentes: Fuente[]
 }
 
@@ -57,6 +58,8 @@ export interface Favorito {
   fechaGuardado: string
 }
 
+// El backend real no tiene moderación de comentarios (ni campo de estado,
+// ni servicio de IA) — por eso no hay un campo "moderado" aquí.
 export interface Comentario {
   id: string
   texto: string
@@ -64,15 +67,12 @@ export interface Comentario {
     id: string
     nombre: string
   }
-  vistaId: string
-  hiloId: string
   fechaCreacion: string
-  moderado: boolean
+  respuestas: Comentario[]
 }
 
 export interface HiloComentarios {
   id: string
-  tema: string
-  vistaId: string
+  tema: string | null
   comentarios: Comentario[]
 }
