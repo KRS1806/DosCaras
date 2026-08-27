@@ -5,8 +5,10 @@ import PlaceholderView from '@/views/PlaceholderView.vue'
 import PublicationFormView from '@/views/PublicationFormView.vue'
 import SearchResultsView from '@/views/SearchResultsView.vue'
 import ProfileView from '@/views/ProfileView.vue'
+import AdminCategoriesView from '@/views/AdminCategoriesView.vue'
 import AdminUsersView from '@/views/AdminUsersView.vue'
 import PublicationDetailView from '@/views/PublicationDetailView.vue'
+import AdminModerationView from '@/views/AdminModerationView.vue'
 
 declare module 'vue-router' {
   interface RouteMeta {
@@ -90,17 +92,13 @@ const router = createRouter({
     {
       path: '/admin/categories',
       name: 'admin-categories',
-      // TODO: reemplazar en plan 09
-      component: PlaceholderView,
-      props: { titulo: 'Panel superadmin: gestión de categorías' },
+      component: AdminCategoriesView,
       meta: { requiresAuth: true, requiresRole: 'superadmin' },
     },
     {
       path: '/admin/moderation',
       name: 'admin-moderation',
-      // TODO: reemplazar en plan 10
-      component: PlaceholderView,
-      props: { titulo: 'Panel superadmin: moderación de contenido' },
+      component: AdminModerationView,
       meta: { requiresAuth: true, requiresRole: 'superadmin' },
     },
     {
