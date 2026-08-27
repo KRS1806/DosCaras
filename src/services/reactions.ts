@@ -1,10 +1,6 @@
 import { httpClient } from './httpClient'
 import type { Lado } from '@/models'
 
-// Shape real confirmado contra el código del backend (barroyo/doscarasapi):
-// POST /views/:id/sides/a|b/like|dislike devuelve { likeCount, dislikeCount,
-// myReaction }. La reacción reemplaza cualquier reacción previa del usuario
-// en ese lado (es idempotente, no hay "quitar reacción").
 interface ReaccionApi {
   likeCount: number
   dislikeCount: number

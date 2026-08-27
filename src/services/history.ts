@@ -19,8 +19,6 @@ export function limpiarHistorial(): void {
   CacheService.remove(KEY)
 }
 
-// La usa la pantalla de detalle de publicación (Plan 02) al montar, para
-// dejar el registro que esta pantalla (Plan 06) luego solo lee.
 export function registrarVisita(entrada: Omit<EntradaHistorial, 'fechaVisita'>): void {
   const entradas = CacheService.get<EntradaHistorial[]>(KEY) ?? []
   const sinDuplicado = entradas.filter((existente) => existente.id !== entrada.id)

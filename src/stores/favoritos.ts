@@ -43,8 +43,6 @@ export const useFavoritosStore = defineStore('favoritos', {
     recargarDesdeCache() {
       this.ids = new Set(CacheService.get<string[]>(KEY) ?? [])
     },
-    // Sincroniza con la lista de IDs que devuelve el servidor (perfil), y
-    // solo escribe la caché si realmente cambió.
     sincronizarIds(idsServidor: string[]) {
       const actuales = Array.from(this.ids).sort()
       const nuevos = [...idsServidor].sort()

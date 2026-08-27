@@ -1,8 +1,6 @@
 import { httpClient } from './httpClient'
 import type { Comentario, HiloComentarios } from '@/models'
 
-// Shape real confirmado contra el código del backend (barroyo/doscarasapi).
-// No existe moderación de comentarios (ni campo de estado ni servicio de IA).
 interface ComentarioApi {
   id: string
   content: string

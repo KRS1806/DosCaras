@@ -58,8 +58,6 @@ export interface Favorito {
   fechaGuardado: string
 }
 
-// El backend real no tiene moderación de comentarios (ni campo de estado,
-// ni servicio de IA) — por eso no hay un campo "moderado" aquí.
 export interface Comentario {
   id: string
   texto: string

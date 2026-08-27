@@ -24,6 +24,15 @@ function mapearCategoria(categoria: CategoriaApi): Categoria {
   }
 }
 
+export async function obtenerCategoria(id: string): Promise<Categoria> {
+  const respuesta = await httpClient.get<{ category: CategoriaApi }>(`/categories/${id}`)
+  return mapearCategoria(respuesta.category)
+}
+
+export function invalidarCategoriasCache(): void {
+  CacheService.remove(KEY)
+}
+
 export async function obtenerCategorias(): Promise<Categoria[]> {
   const cacheadas = CacheService.get<Categoria[]>(KEY, TTL_MS)
   if (cacheadas) {
