@@ -2,7 +2,7 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import { obtenerVistasAdmin, type EstadoFiltro } from '@/services/adminViews'
 import { despublicarVista, publicarVista } from '@/services/views'
-import { extraerMensajeError } from '@/services/httpClient'
+import { extraerMensajeError, notificarErrorNoManejado } from '@/services/httpClient'
 import { useNotifications } from '@/stores/notifications'
 import type { Publicacion } from '@/models'
 
@@ -75,7 +75,7 @@ async function alternarPublicacion(publicacion: Publicacion) {
     // desaparezca si ya no coincide con el filtro de estado activo.
     await cargar()
   } catch (error) {
-    notificaciones.error(extraerMensajeError(error, 'No se pudo completar la acción.'))
+    notificarErrorNoManejado(error, 'No se pudo completar la acción.')
   } finally {
     idEnProceso.value = null
   }

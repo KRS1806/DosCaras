@@ -5,7 +5,7 @@ import { obtenerVista, despublicarVista, publicarVista } from '@/services/views'
 import { reaccionar } from '@/services/reactions'
 import { obtenerHilos, crearHilo, comentarEnHilo } from '@/services/threads'
 import { registrarVisita } from '@/services/history'
-import { NotFoundError, extraerMensajeError } from '@/services/httpClient'
+import { NotFoundError, extraerMensajeError, notificarErrorNoManejado } from '@/services/httpClient'
 import { useAuthStore } from '@/stores/auth'
 import { useFavoritosStore } from '@/stores/favoritos'
 import { useNotifications } from '@/stores/notifications'
@@ -106,7 +106,7 @@ async function reaccionarLado(lado: 'A' | 'B', tipo: 'like' | 'dislike') {
     destino.dislikes = resultado.dislikes
     destino.miReaccion = resultado.miReaccion
   } catch (error) {
-    notificaciones.error(extraerMensajeError(error, 'No se pudo registrar tu reacción.'))
+    notificarErrorNoManejado(error, 'No se pudo registrar tu reacción.')
   }
 }
 
@@ -140,7 +140,7 @@ async function enviarComentario() {
     await cargarHilos()
     notificaciones.success('Comentario publicado.')
   } catch (error) {
-    notificaciones.error(extraerMensajeError(error, 'No se pudo publicar tu comentario.'))
+    notificarErrorNoManejado(error, 'No se pudo publicar tu comentario.')
   } finally {
     enviandoComentario.value = false
   }
@@ -160,7 +160,7 @@ async function despublicar() {
     publicacion.value.publicado = false
     notificaciones.success('Publicación despublicada.')
   } catch (error) {
-    notificaciones.error(extraerMensajeError(error, 'No se pudo despublicar la publicación.'))
+    notificarErrorNoManejado(error, 'No se pudo despublicar la publicación.')
   } finally {
     despublicando.value = false
   }
@@ -180,7 +180,7 @@ async function publicar() {
     publicacion.value.publicado = true
     notificaciones.success('Publicación republicada.')
   } catch (error) {
-    notificaciones.error(extraerMensajeError(error, 'No se pudo republicar la publicación.'))
+    notificarErrorNoManejado(error, 'No se pudo republicar la publicación.')
   } finally {
     despublicando.value = false
   }
