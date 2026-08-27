@@ -3,9 +3,9 @@ import { computed } from 'vue'
 import type { Publicacion } from '@/models'
 import { useAuthStore } from '@/stores/auth'
 import { useFavoritosStore } from '@/stores/favoritos'
-import { useNotifications } from '@/stores/notifications'
 import { colorCategoria } from '@/utils/categoryColor'
 import { resaltarTexto } from '@/utils/resaltarTexto'
+import { compartirPublicacion } from '@/utils/compartir'
 
 const props = defineProps<{
   publicacion: Publicacion
@@ -14,7 +14,6 @@ const props = defineProps<{
 
 const auth = useAuthStore()
 const favoritos = useFavoritosStore()
-const notificaciones = useNotifications()
 
 const esFavorito = computed(() => favoritos.esFavorito(props.publicacion.id))
 
@@ -35,24 +34,8 @@ function alternarFavorito() {
   favoritos.alternar(props.publicacion.id)
 }
 
-async function compartir() {
-  const url = `${window.location.origin}/views/${props.publicacion.id}`
-
-  if (navigator.share) {
-    try {
-      await navigator.share({ title: props.publicacion.titulo, url })
-    } catch {
-      // El usuario canceló el diálogo nativo de compartir; no es un error.
-    }
-    return
-  }
-
-  try {
-    await navigator.clipboard.writeText(url)
-    notificaciones.info('Enlace copiado')
-  } catch {
-    notificaciones.error('No se pudo copiar el enlace.')
-  }
+function compartir() {
+  compartirPublicacion(props.publicacion.id, props.publicacion.titulo)
 }
 </script>
 

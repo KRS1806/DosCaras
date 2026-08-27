@@ -170,6 +170,10 @@ watch(
 )
 
 async function enviar() {
+  // Si el usuario escribió un hashtag pero no presionó Enter/coma antes de
+  // publicar, se agrega igual en vez de perderse.
+  agregarHashtag(hashtagBorrador.value)
+
   erroresServidor.value = {}
   mensajeErrorServidor.value = ''
 

@@ -5,6 +5,10 @@ import PlaceholderView from '@/views/PlaceholderView.vue'
 import PublicationFormView from '@/views/PublicationFormView.vue'
 import SearchResultsView from '@/views/SearchResultsView.vue'
 import ProfileView from '@/views/ProfileView.vue'
+import AdminCategoriesView from '@/views/AdminCategoriesView.vue'
+import AdminUsersView from '@/views/AdminUsersView.vue'
+import PublicationDetailView from '@/views/PublicationDetailView.vue'
+import AdminModerationView from '@/views/AdminModerationView.vue'
 
 declare module 'vue-router' {
   interface RouteMeta {
@@ -49,9 +53,7 @@ const router = createRouter({
     {
       path: '/views/:id',
       name: 'view-detail',
-      // TODO: reemplazar en plan 02
-      component: PlaceholderView,
-      props: { titulo: 'Detalle de publicación' },
+      component: PublicationDetailView,
     },
     {
       path: '/views/new',
@@ -79,47 +81,35 @@ const router = createRouter({
     {
       path: '/authors/:id',
       name: 'author-profile',
-      // TODO: reemplazar en plan 07
-      component: PlaceholderView,
-      props: { titulo: 'Perfil público de autor' },
+      component: () => import('@/views/AuthorProfileView.vue'),
     },
     {
       path: '/admin/users',
       name: 'admin-users',
-      // TODO: reemplazar en plan 08
-      component: PlaceholderView,
-      props: { titulo: 'Panel superadmin: gestión de usuarios' },
+      component: AdminUsersView,
       meta: { requiresAuth: true, requiresRole: 'superadmin' },
     },
     {
       path: '/admin/categories',
       name: 'admin-categories',
-      // TODO: reemplazar en plan 09
-      component: PlaceholderView,
-      props: { titulo: 'Panel superadmin: gestión de categorías' },
+      component: AdminCategoriesView,
       meta: { requiresAuth: true, requiresRole: 'superadmin' },
     },
     {
       path: '/admin/moderation',
       name: 'admin-moderation',
-      // TODO: reemplazar en plan 10
-      component: PlaceholderView,
-      props: { titulo: 'Panel superadmin: moderación de contenido' },
+      component: AdminModerationView,
       meta: { requiresAuth: true, requiresRole: 'superadmin' },
     },
     {
       path: '/403',
       name: 'forbidden',
-      // TODO: reemplazar en plan 11
-      component: PlaceholderView,
-      props: { titulo: 'Acceso denegado (403)' },
+      component: () => import('@/views/ForbiddenView.vue'),
     },
     {
       path: '/:pathMatch(.*)*',
       name: 'not-found',
-      // TODO: reemplazar en plan 11
-      component: PlaceholderView,
-      props: { titulo: 'Página no encontrada (404)' },
+      component: () => import('@/views/NotFoundView.vue'),
     },
   ],
 })

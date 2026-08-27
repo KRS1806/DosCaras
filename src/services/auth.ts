@@ -8,8 +8,6 @@ export interface RegisterPayload {
   password: string
 }
 
-// Shape real confirmado contra el código del backend (barroyo/doscarasapi):
-// role: 'USER' | 'SUPERADMIN', status: 'PENDING' | 'ACTIVE' | 'SUSPENDED'.
 export interface UsuarioApi {
   id: string
   email: string
@@ -34,7 +32,7 @@ export interface LoginResponse {
   user: UsuarioApi
 }
 
-function mapearUsuario(usuario: UsuarioApi): Usuario {
+export function mapearUsuario(usuario: UsuarioApi): Usuario {
   return {
     id: usuario.id,
     nombre: usuario.name,

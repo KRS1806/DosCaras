@@ -10,6 +10,7 @@ export interface ConsultaVistas {
   hashtag?: string
   sort?: OrdenTablero
   autor?: 'me'
+  autorId?: string
 }
 
 const ORDEN_API: Record<OrdenTablero, 'recent' | 'likes'> = {
@@ -67,10 +68,17 @@ interface LadoApi {
   sources?: FuenteApi[]
   likeCount?: number
   dislikeCount?: number
+  myReaction?: 'LIKE' | 'DISLIKE' | null
 }
 
 function ladoVacio(): Lado {
-  return { titulo: '', descripcion: '', likes: 0, dislikes: 0, fuentes: [] }
+  return { titulo: '', descripcion: '', likes: 0, dislikes: 0, miReaccion: null, fuentes: [] }
+}
+
+function mapearReaccion(reaccion: LadoApi['myReaction']): Lado['miReaccion'] {
+  if (reaccion === 'LIKE') return 'like'
+  if (reaccion === 'DISLIKE') return 'dislike'
+  return null
 }
 
 function mapearLado(lado: LadoApi): Lado {
@@ -79,6 +87,7 @@ function mapearLado(lado: LadoApi): Lado {
     descripcion: lado.description ?? '',
     likes: lado.likeCount ?? 0,
     dislikes: lado.dislikeCount ?? 0,
+    miReaccion: mapearReaccion(lado.myReaction),
     fuentes: (lado.sources ?? []).map(mapearFuente),
   }
 }
@@ -128,6 +137,7 @@ export async function obtenerVistas(consulta: ConsultaVistas): Promise<Respuesta
       hashtag: consulta.hashtag,
       sort: consulta.sort ? ORDEN_API[consulta.sort] : undefined,
       autor: consulta.autor,
+      autorId: consulta.autorId,
     },
   })
 
@@ -199,6 +209,18 @@ export async function crearVista(payload: PublicacionPayload): Promise<Publicaci
 export async function actualizarVista(id: string, payload: PublicacionPayload): Promise<Publicacion> {
   const respuesta = await httpClient.put<{ view: unknown }>(`/views/${id}`, mapearPublicacionPayload(payload))
   return mapearPublicacion(respuesta.view)
+}
+
+// unpublish/publish devuelven la vista sin las relaciones anidadas
+// (sin sides/category/author/hashtags), a diferencia de GET /views/:id.
+// Por eso no se remapea la respuesta con mapearPublicacion: solo se
+// confirma que la llamada tuvo éxito y el estado se actualiza en el cliente.
+export async function despublicarVista(id: string): Promise<void> {
+  await httpClient.patch<unknown>(`/views/${id}/unpublish`)
+}
+
+export async function publicarVista(id: string): Promise<void> {
+  await httpClient.patch<unknown>(`/views/${id}/publish`)
 }
 
 export function agregarFavorito(id: string) {
