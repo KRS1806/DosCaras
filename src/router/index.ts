@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import HomeView from '@/views/HomeView.vue'
-import PlaceholderView from '@/views/PlaceholderView.vue'
 import PublicationFormView from '@/views/PublicationFormView.vue'
 import SearchResultsView from '@/views/SearchResultsView.vue'
 import ProfileView from '@/views/ProfileView.vue'
@@ -9,6 +8,7 @@ import AdminCategoriesView from '@/views/AdminCategoriesView.vue'
 import AdminUsersView from '@/views/AdminUsersView.vue'
 import PublicationDetailView from '@/views/PublicationDetailView.vue'
 import AdminModerationView from '@/views/AdminModerationView.vue'
+import CategoryPageView from '@/views/CategoryPageView.vue'
 
 declare module 'vue-router' {
   interface RouteMeta {
@@ -46,9 +46,7 @@ const router = createRouter({
     {
       path: '/categories/:id',
       name: 'category-detail',
-      // TODO: reemplazar en plan 04
-      component: PlaceholderView,
-      props: { titulo: 'Página de categoría' },
+      component: CategoryPageView,
     },
     {
       path: '/views/:id',

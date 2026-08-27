@@ -3,13 +3,17 @@ import { ref } from 'vue'
 import type { Categoria, Hashtag } from '@/models'
 import type { OrdenTablero } from '@/services/views'
 
-const props = defineProps<{
-  categoria: string | null
-  hashtags: string[]
-  orden: OrdenTablero
-  categorias: Categoria[]
-  hashtagsDisponibles: Hashtag[]
-}>()
+const props = withDefaults(
+  defineProps<{
+    categoria: string | null
+    hashtags: string[]
+    orden: OrdenTablero
+    categorias: Categoria[]
+    hashtagsDisponibles: Hashtag[]
+    mostrarCategoria?: boolean
+  }>(),
+  { mostrarCategoria: true },
+)
 
 const emit = defineEmits<{
   'cambiar-categoria': [categoria: string | null]
@@ -46,7 +50,7 @@ function agregarHashtag() {
 
 <template>
   <aside class="filter-panel">
-    <div class="filter-panel__field">
+    <div v-if="mostrarCategoria" class="filter-panel__field">
       <label for="filtro-categoria">Categoría</label>
       <select id="filtro-categoria" :value="categoria ?? ''" @change="onCategoriaChange">
         <option value="">Todas las categorías</option>

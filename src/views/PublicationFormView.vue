@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import axios from 'axios'
 import { CacheService } from '@/services/cacheService'
 import { obtenerCategorias } from '@/services/categories'
 import { buscarHashtags } from '@/services/hashtags'
 import { obtenerVista, crearVista, actualizarVista, type PublicacionPayload } from '@/services/views'
-import { extraerMensajeError, type ErrorDeValidacion } from '@/services/httpClient'
+import { notificarErrorNoManejado, ForbiddenError, type ErrorDeValidacion } from '@/services/httpClient'
 import { useNotifications } from '@/stores/notifications'
 import type { Categoria, Hashtag } from '@/models'
 import LadoFormSection from '@/components/publication/LadoFormSection.vue'
@@ -205,7 +204,7 @@ async function enviar() {
       mensajeErrorServidor.value = errorValidacion.message
       erroresServidor.value = mapearErroresServidor(errorValidacion.campos)
     } else {
-      notificaciones.error(extraerMensajeError(error, 'No se pudo guardar la publicación.'))
+      notificarErrorNoManejado(error, 'No se pudo guardar la publicación.')
     }
   } finally {
     enviando.value = false
@@ -250,10 +249,10 @@ onMounted(async () => {
       })
       guardarSnapshotInicial()
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response?.status === 403) {
+      if (error instanceof ForbiddenError) {
         accesoDenegado.value = true
       } else {
-        notificaciones.error(extraerMensajeError(error, 'No se pudo cargar la publicación.'))
+        notificarErrorNoManejado(error, 'No se pudo cargar la publicación.')
         router.push('/')
       }
     } finally {

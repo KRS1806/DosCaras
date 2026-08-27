@@ -4,11 +4,6 @@ import type { Publicacion } from '@/models'
 
 export type EstadoFiltro = 'todas' | 'publicadas' | 'despublicadas'
 
-// Shape real confirmado contra el código del backend (barroyo/doscarasapi):
-// GET /admin/views usa listViewsForAdmin, que devuelve el mismo shape que
-// GET /views ({ total, page, limit, views: [...] }), por eso se reutiliza
-// mapearPublicacion. status acepta 'PUBLISHED' | 'UNPUBLISHED', opcional
-// (omitirlo devuelve todas).
 const ESTADO_API: Record<EstadoFiltro, 'PUBLISHED' | 'UNPUBLISHED' | undefined> = {
   todas: undefined,
   publicadas: 'PUBLISHED',
