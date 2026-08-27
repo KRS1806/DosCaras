@@ -1,4 +1,5 @@
 import { httpClient } from './httpClient'
+import { invalidarCategoriasCache } from './categories'
 import type { Categoria } from '@/models'
 
 interface CategoriaApi {
@@ -23,14 +24,17 @@ export async function obtenerTodasCategorias(): Promise<Categoria[]> {
 
 export async function crearCategoria(nombre: string): Promise<Categoria> {
   const respuesta = await httpClient.post<{ category: CategoriaApi }>('/admin/categories', { name: nombre })
+  invalidarCategoriasCache()
   return mapearCategoria(respuesta.category)
 }
 
 export async function actualizarCategoria(id: string, nombre: string): Promise<Categoria> {
   const respuesta = await httpClient.put<{ category: CategoriaApi }>(`/admin/categories/${id}`, { name: nombre })
+  invalidarCategoriasCache()
   return mapearCategoria(respuesta.category)
 }
 
-export function eliminarCategoria(id: string) {
-  return httpClient.delete<void>(`/admin/categories/${id}`)
+export async function eliminarCategoria(id: string): Promise<void> {
+  await httpClient.delete<void>(`/admin/categories/${id}`)
+  invalidarCategoriasCache()
 }

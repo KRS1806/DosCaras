@@ -211,10 +211,6 @@ export async function actualizarVista(id: string, payload: PublicacionPayload): 
   return mapearPublicacion(respuesta.view)
 }
 
-// unpublish/publish devuelven la vista sin las relaciones anidadas
-// (sin sides/category/author/hashtags), a diferencia de GET /views/:id.
-// Por eso no se remapea la respuesta con mapearPublicacion: solo se
-// confirma que la llamada tuvo éxito y el estado se actualiza en el cliente.
 export async function despublicarVista(id: string): Promise<void> {
   await httpClient.patch<unknown>(`/views/${id}/unpublish`)
 }

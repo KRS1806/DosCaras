@@ -104,7 +104,7 @@ function cambiarCategoria(categoria: string | null) {
 }
 
 function agregarHashtag(hashtag: string) {
-  filtros.hashtags = [...filtros.hashtags, hashtag]
+  filtros.hashtags = [hashtag]
 }
 
 function quitarHashtag(hashtag: string) {

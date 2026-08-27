@@ -52,21 +52,6 @@ watch(
 
 <template>
   <div class="resultados">
-    <form class="buscador" @submit.prevent="actualizarBusqueda">
-      <input
-        v-model="terminoInput"
-        type="search"
-        placeholder="Buscar publicaciones…"
-        aria-label="Buscar publicaciones"
-      />
-      <button type="submit" class="btn btn--solido">Buscar</button>
-    </form>
-
-    <div v-if="!termino" class="estado">
-      <p>Escribe un término para buscar publicaciones.</p>
-    </div>
-
-    <template v-else>
       <h1>Resultados para: "{{ termino }}"</h1>
 
       <div v-if="cargando" class="grid-skeleton">
@@ -94,7 +79,6 @@ watch(
           />
         </div>
       </template>
-    </template>
   </div>
 </template>
 
