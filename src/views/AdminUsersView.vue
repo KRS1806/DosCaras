@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
 import { obtenerUsuarios, banearUsuario, desbanearUsuario } from '@/services/adminUsers'
-import { extraerMensajeError } from '@/services/httpClient'
+import { extraerMensajeError, notificarErrorNoManejado } from '@/services/httpClient'
 import { useAuthStore } from '@/stores/auth'
 import { useNotifications } from '@/stores/notifications'
 import type { Usuario } from '@/models'
@@ -79,7 +79,7 @@ async function alternarBaneo(usuario: Usuario) {
     }
     notificaciones.success(banear ? 'Usuario baneado.' : 'Usuario desbaneado.')
   } catch (error) {
-    notificaciones.error(extraerMensajeError(error, 'No se pudo completar la acción.'))
+    notificarErrorNoManejado(error, 'No se pudo completar la acción.')
   } finally {
     idEnProceso.value = null
   }

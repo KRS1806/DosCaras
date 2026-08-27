@@ -9,6 +9,22 @@ export class NotFoundError extends Error {
   }
 }
 
+export class ForbiddenError extends Error {
+  constructor(message = 'No tenés permisos para realizar esta acción.') {
+    super(message)
+    this.name = 'ForbiddenError'
+  }
+}
+
+export class NetworkError extends Error {
+  manejado = true
+
+  constructor(message = 'No hay conexión a internet. Verificá tu conexión e intentá nuevamente.') {
+    super(message)
+    this.name = 'NetworkError'
+  }
+}
+
 export interface ErrorDeValidacion {
   message: string
   campos?: Record<string, string[]>
@@ -31,12 +47,27 @@ function esErrorDeRed(error: unknown): boolean {
   return axios.isAxiosError(error) && !error.response
 }
 
+function marcarManejado(error: Error): Error {
+  Object.assign(error, { manejado: true })
+  return error
+}
+
+function esManejado(error: unknown): boolean {
+  return typeof error === 'object' && error !== null && 'manejado' in error && (error as { manejado?: boolean }).manejado === true
+}
+
 async function manejarError(error: unknown): Promise<never> {
   if (!axios.isAxiosError(error)) {
     throw error
   }
 
   const notificaciones = useNotifications()
+
+  if (esErrorDeRed(error)) {
+    notificaciones.error('No hay conexión a internet. Verificá tu conexión e intentá nuevamente.')
+    throw new NetworkError()
+  }
+
   const status = error.response?.status
   const data = error.response?.data as
     | { error?: string; details?: { fieldErrors?: Record<string, string[]> } }
@@ -51,18 +82,25 @@ async function manejarError(error: unknown): Promise<never> {
       } as ErrorDeValidacion
     case 401: {
       const auth = useAuthStore()
+      if (!auth.token) {
+        notificaciones.error('Credenciales inválidas.')
+        throw new Error('Credenciales inválidas.')
+      }
       auth.cerrarSesion()
       notificaciones.error('Su sesión ha expirado.')
       const { default: router } = await import('@/router')
       router.push('/login')
-      throw error
+      throw marcarManejado(new Error(mensaje ?? 'Su sesión ha expirado.'))
     }
     case 403:
-      throw error
+      throw new ForbiddenError(mensaje)
     case 404:
       throw new NotFoundError(mensaje)
     case 409:
-      throw new Error(mensaje ?? 'La solicitud entra en conflicto con el estado actual del recurso.')
+      throw {
+        message: mensaje ?? 'La solicitud entra en conflicto con el estado actual del recurso.',
+        campos: data?.details?.fieldErrors,
+      } as ErrorDeValidacion
     case 422:
       throw {
         message: mensaje ?? 'No se pudo procesar la solicitud.',
@@ -73,7 +111,7 @@ async function manejarError(error: unknown): Promise<never> {
     case 503:
       console.error('Error del servidor:', error)
       notificaciones.error('Ocurrió un error en el servidor. Intente más tarde.')
-      throw error
+      throw marcarManejado(new Error('Ocurrió un error en el servidor. Intente más tarde.'))
     default:
       console.error('Error inesperado en la solicitud HTTP:', error)
       throw error
@@ -114,4 +152,11 @@ export function extraerMensajeError(error: unknown, mensajePorDefecto: string): 
     }
   }
   return mensajePorDefecto
+}
+
+export function notificarErrorNoManejado(error: unknown, mensajePorDefecto: string): void {
+  if (esManejado(error)) {
+    return
+  }
+  useNotifications().error(extraerMensajeError(error, mensajePorDefecto))
 }

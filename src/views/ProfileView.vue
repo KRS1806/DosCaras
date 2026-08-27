@@ -5,7 +5,7 @@ import { obtenerPerfilActual } from '@/services/auth'
 import { obtenerVistas, obtenerVista } from '@/services/views'
 import { obtenerMisFavoritosIds } from '@/services/users'
 import { obtenerHistorial, limpiarHistorial, type EntradaHistorial } from '@/services/history'
-import { extraerMensajeError } from '@/services/httpClient'
+import { extraerMensajeError, notificarErrorNoManejado } from '@/services/httpClient'
 import { useAuthStore } from '@/stores/auth'
 import { useFavoritosStore } from '@/stores/favoritos'
 import { useNotifications } from '@/stores/notifications'
@@ -45,7 +45,7 @@ async function cargarPerfil() {
       auth.iniciarSesion(auth.token, perfil.value)
     }
   } catch (error) {
-    notificaciones.error(extraerMensajeError(error, 'No se pudo cargar tu perfil.'))
+    notificarErrorNoManejado(error, 'No se pudo cargar tu perfil.')
   } finally {
     cargandoPerfil.value = false
   }

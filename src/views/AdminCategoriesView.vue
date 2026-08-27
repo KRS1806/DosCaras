@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { obtenerTodasCategorias, crearCategoria, actualizarCategoria, eliminarCategoria } from '@/services/adminCategories'
-import { extraerMensajeError } from '@/services/httpClient'
+import { extraerMensajeError, notificarErrorNoManejado } from '@/services/httpClient'
 import { useNotifications } from '@/stores/notifications'
 import type { Categoria } from '@/models'
 
@@ -102,7 +102,7 @@ async function desactivar(categoria: Categoria) {
     categoria.activo = false
     notificaciones.success('Categoría eliminada.')
   } catch (error) {
-    notificaciones.error(extraerMensajeError(error, 'No se pudo eliminar la categoría.'))
+    notificarErrorNoManejado(error, 'No se pudo eliminar la categoría.')
   } finally {
     idEliminando.value = null
   }
