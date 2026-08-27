@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { obtenerVista, despublicarVista } from '@/services/views'
+import { obtenerVista, despublicarVista, publicarVista } from '@/services/views'
 import { reaccionar } from '@/services/reactions'
 import { obtenerHilos, crearHilo, comentarEnHilo } from '@/services/threads'
 import { registrarVisita } from '@/services/history'
@@ -156,10 +156,31 @@ async function despublicar() {
 
   despublicando.value = true
   try {
-    publicacion.value = await despublicarVista(publicacion.value.id)
+    await despublicarVista(publicacion.value.id)
+    publicacion.value.publicado = false
     notificaciones.success('Publicación despublicada.')
   } catch (error) {
     notificaciones.error(extraerMensajeError(error, 'No se pudo despublicar la publicación.'))
+  } finally {
+    despublicando.value = false
+  }
+}
+
+async function publicar() {
+  if (!publicacion.value) {
+    return
+  }
+  if (!window.confirm('¿Seguro que deseas republicar esta publicación?')) {
+    return
+  }
+
+  despublicando.value = true
+  try {
+    await publicarVista(publicacion.value.id)
+    publicacion.value.publicado = true
+    notificaciones.success('Publicación republicada.')
+  } catch (error) {
+    notificaciones.error(extraerMensajeError(error, 'No se pudo republicar la publicación.'))
   } finally {
     despublicando.value = false
   }
@@ -223,6 +244,9 @@ onMounted(async () => {
           <RouterLink v-if="esAutor" :to="`/views/${publicacion.id}/edit`" class="btn">Editar</RouterLink>
           <button v-if="auth.esSuperadmin && publicacion.publicado" type="button" class="btn" :disabled="despublicando" @click="despublicar">
             {{ despublicando ? 'Despublicando…' : 'Despublicar' }}
+          </button>
+          <button v-else-if="auth.esSuperadmin" type="button" class="btn" :disabled="despublicando" @click="publicar">
+            {{ despublicando ? 'Publicando…' : 'Publicar' }}
           </button>
         </div>
       </header>
