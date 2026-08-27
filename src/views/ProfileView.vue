@@ -182,10 +182,10 @@ onMounted(() => {
       <template v-else>
         <button type="button" class="btn" @click="limpiarHistorialClick">Limpiar historial</button>
         <ul class="lista-historial">
-          <li v-for="entrada in historial" :key="`${entrada.id}-${entrada.fechaVisita}`">
+          <li v-for="entrada in historial" :key="`${entrada.id}-${entrada.fechaVista}`">
             <span class="lista-historial__titulo">{{ entrada.titulo }}</span>
             <span class="lista-historial__categoria">{{ entrada.categoria }}</span>
-            <time>{{ formatearFecha(entrada.fechaVisita) }}</time>
+            <time>{{ formatearFecha(entrada.fechaVista) }}</time>
           </li>
         </ul>
       </template>

@@ -7,7 +7,7 @@ export interface EntradaHistorial {
   id: string
   titulo: string
   categoria: string
-  fechaVisita: string
+  fechaVista: string
 }
 
 export function obtenerHistorial(): EntradaHistorial[] {
@@ -19,9 +19,9 @@ export function limpiarHistorial(): void {
   CacheService.remove(KEY)
 }
 
-export function registrarVisita(entrada: Omit<EntradaHistorial, 'fechaVisita'>): void {
+export function registrarVisita(entrada: Omit<EntradaHistorial, 'fechaVista'>): void {
   const entradas = CacheService.get<EntradaHistorial[]>(KEY) ?? []
   const sinDuplicado = entradas.filter((existente) => existente.id !== entrada.id)
-  const nueva: EntradaHistorial = { ...entrada, fechaVisita: new Date().toISOString() }
+  const nueva: EntradaHistorial = { ...entrada, fechaVista: new Date().toISOString() }
   CacheService.set(KEY, [nueva, ...sinDuplicado].slice(0, MAX_ENTRADAS))
 }

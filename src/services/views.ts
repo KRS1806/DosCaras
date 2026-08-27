@@ -1,4 +1,5 @@
 import { httpClient } from './httpClient'
+import { invalidarHashtagsCache } from './hashtags'
 import type { Fuente, Lado, Publicacion } from '@/models'
 
 export type OrdenTablero = 'recientes' | 'likes_a' | 'likes_b'
@@ -203,11 +204,13 @@ function mapearPublicacionPayload(payload: PublicacionPayload) {
 
 export async function crearVista(payload: PublicacionPayload): Promise<Publicacion> {
   const respuesta = await httpClient.post<{ view: unknown }>('/views', mapearPublicacionPayload(payload))
+  invalidarHashtagsCache()
   return mapearPublicacion(respuesta.view)
 }
 
 export async function actualizarVista(id: string, payload: PublicacionPayload): Promise<Publicacion> {
   const respuesta = await httpClient.put<{ view: unknown }>(`/views/${id}`, mapearPublicacionPayload(payload))
+  invalidarHashtagsCache()
   return mapearPublicacion(respuesta.view)
 }
 
