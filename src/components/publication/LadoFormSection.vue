@@ -9,8 +9,6 @@ defineProps<{
 
 const modelo = defineModel<LadoPayload>({ required: true })
 
-const MIN_DESCRIPCION = 100
-
 const OPCIONES_TIPO: Array<{ valor: FuentePayload['tipo']; etiqueta: string }> = [
   { valor: 'enlace', etiqueta: 'Enlace' },
   { valor: 'youtube', etiqueta: 'YouTube' },
@@ -37,11 +35,9 @@ function quitarFuente(indice: number) {
     </div>
 
     <div class="campo">
-      <label>Argumento</label>
-      <textarea v-model="modelo.descripcion" rows="5" required></textarea>
-      <span class="contador" :class="{ 'contador--invalido': modelo.descripcion.length < MIN_DESCRIPCION }">
-        {{ modelo.descripcion.length }} / mínimo {{ MIN_DESCRIPCION }} caracteres
-      </span>
+      <label>Argumento (opcional)</label>
+      <textarea v-model="modelo.descripcion" rows="5"></textarea>
+      <span class="contador">{{ modelo.descripcion.length }} caracteres</span>
     </div>
 
     <div class="fuentes">
@@ -120,11 +116,6 @@ textarea {
   font-size: 0.78rem;
   color: var(--color-text);
   opacity: 0.7;
-}
-
-.contador--invalido {
-  color: #dc2626;
-  opacity: 1;
 }
 
 .fuentes__encabezado {

@@ -1,5 +1,7 @@
 import { httpClient } from './httpClient'
+import { obtenerMisFavoritosIds } from './users'
 import { useAuthStore } from '@/stores/auth'
+import { useFavoritosStore } from '@/stores/favoritos'
 import type { Usuario } from '@/models'
 
 export interface RegisterPayload {
@@ -54,7 +56,14 @@ export function activate(token: string) {
 export async function login(payload: LoginPayload) {
   const response = await httpClient.post<LoginResponse>('/auth/login', payload)
   useAuthStore().iniciarSesion(response.token, mapearUsuario(response.user))
+  sincronizarFavoritosTrasLogin()
   return response
+}
+
+function sincronizarFavoritosTrasLogin(): void {
+  obtenerMisFavoritosIds()
+    .then((ids) => useFavoritosStore().sincronizarIds(ids))
+    .catch(() => {})
 }
 
 export function logout() {

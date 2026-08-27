@@ -11,7 +11,6 @@ import type { Categoria, Hashtag } from '@/models'
 import LadoFormSection from '@/components/publication/LadoFormSection.vue'
 
 const DRAFT_KEY = 'lasdoscaras_draft'
-const MIN_DESCRIPCION = 100
 
 const MAPA_CAMPOS_SERVIDOR: Record<string, string> = {
   categoryId: 'categoriaId',
@@ -116,9 +115,6 @@ function validar(): boolean {
   ] as const) {
     if (!lado.titulo.trim()) {
       problemas.push(`El título de ${nombre} es obligatorio.`)
-    }
-    if (lado.descripcion.trim().length < MIN_DESCRIPCION) {
-      problemas.push(`El argumento de ${nombre} debe tener al menos ${MIN_DESCRIPCION} caracteres.`)
     }
     if (lado.fuentes.length === 0) {
       problemas.push(`Agrega al menos una fuente en ${nombre}.`)

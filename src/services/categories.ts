@@ -34,21 +34,8 @@ export function invalidarCategoriasCache(): void {
 }
 
 export async function obtenerCategorias(): Promise<Categoria[]> {
-  const cacheadas = CacheService.get<Categoria[]>(KEY, TTL_MS)
-  if (cacheadas) {
-    return cacheadas
-  }
-
-  try {
+  return CacheService.obtenerConRevalidacion(KEY, TTL_MS, async () => {
     const respuesta = await httpClient.get<RespuestaCategorias>('/categories')
-    const categorias = respuesta.categories.map(mapearCategoria)
-    CacheService.set(KEY, categorias)
-    return categorias
-  } catch (error) {
-    const respaldo = CacheService.get<Categoria[]>(KEY)
-    if (respaldo) {
-      return respaldo
-    }
-    throw error
-  }
+    return respuesta.categories.map(mapearCategoria)
+  })
 }
