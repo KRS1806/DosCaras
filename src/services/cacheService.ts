@@ -33,4 +33,23 @@ function clear(key: string): void {
   localStorage.removeItem(key)
 }
 
-export const CacheService = { set, get, remove, clear }
+async function obtenerConRevalidacion<T>(key: string, ttlMs: number, fetcher: () => Promise<T>): Promise<T> {
+  const vigente = get<T>(key, ttlMs)
+  if (vigente) {
+    return vigente
+  }
+
+  const obsoleta = get<T>(key)
+  if (obsoleta) {
+    fetcher()
+      .then((valor) => set(key, valor))
+      .catch(() => {})
+    return obsoleta
+  }
+
+  const valor = await fetcher()
+  set(key, valor)
+  return valor
+}
+
+export const CacheService = { set, get, remove, clear, obtenerConRevalidacion }

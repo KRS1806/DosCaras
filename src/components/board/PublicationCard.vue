@@ -19,7 +19,7 @@ const esFavorito = computed(() => favoritos.esFavorito(props.publicacion.id))
 
 const extractoLadoA = computed(() => {
   const texto = props.publicacion.ladoA.descripcion
-  const MAX = 140
+  const MAX = 100
   return texto.length > MAX ? `${texto.slice(0, MAX).trimEnd()}…` : texto
 })
 
@@ -155,6 +155,8 @@ function compartir() {
   font-size: 0.9rem;
   color: var(--color-text);
   opacity: 0.85;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .card__hashtags {
